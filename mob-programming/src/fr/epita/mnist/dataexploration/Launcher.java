@@ -13,6 +13,7 @@ public class Launcher {
     public static void main(String[] args) throws FileNotFoundException {
 
         /* Read MNIS_TrainModel */
+        ///Users/ibrahim/Desktop/AIS/Java/mnist-project/mob-programming/mnist_train.csv
         String filePath_train ="/Users/ibrahim/Desktop/AIS/Java/mnist-project/mob-programming/mnist_train.csv";
         MNISTModel model_Train = new MNISTModel(filePath_train);
 

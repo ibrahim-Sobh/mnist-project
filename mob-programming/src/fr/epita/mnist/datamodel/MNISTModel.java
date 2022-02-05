@@ -102,14 +102,14 @@ public class MNISTModel {
                 invalidResults+=this.confusionMatrix[index/10][index%10];
             }
              SpacesLeft=maxSpacePerCell-Double.toString(this.confusionMatrix[index/10][index%10]).length();
-             toDisplay+= "|"+" ".repeat(SpacesLeft)+ (int)this.confusionMatrix[index/10][index%10]+" ";
+             toDisplay+= "|"+" ".repeat(SpacesLeft)+ (index/10 == index%10?"\033[0;1m":"\033[0;0m")+(int)this.confusionMatrix[index/10][index%10]+" ";
 
              if(index%10==9){
                  toDisplay+="|\n";
                  toDisplay+="-".repeat(maxSpacePerCell*10)+"\n";
              }
          }
-         toDisplay+="Accuracy is % " + String.format("%.2f", validResults/(validResults+invalidResults)*100)+"\n\n";
+         toDisplay+="Accuracy is % " + String.format("%.2f", validResults/(validResults+invalidResults)*100)+"\n\n\033[0;0m";
          return toDisplay;
      }
 

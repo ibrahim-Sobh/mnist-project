@@ -13,18 +13,17 @@ public class Launcher {
     public static void main(String[] args) throws FileNotFoundException {
 
         /* Read MNIS_TrainModel */
-        ///Users/ibrahim/Desktop/AIS/Java/mnist-project/mob-programming/mnist_train.csv
-        String filePath_train ="/Users/ibrahim/Desktop/AIS/Java/mnist-project/mob-programming/mnist_train.csv";
+        String filePath_train ="/Users/ibrahim/IdeaProjects/mnist_train.csv";
         MNISTModel model_Train = new MNISTModel(filePath_train);
 
         /*Display the First image of the Training Model data set */
         System.out.print(model_Train.images.get(0).displayPixels());
 
         /*Isolate images of a digit from a data set*/
-        List <MNISTImage> images_of_Zeros = model_Train.IsolateImagesOfDigit(0,10);
+        List <MNISTImage> images_of_Zeros = model_Train.IsolateImagesOfDigit(0,11);
         System.out.print(images_of_Zeros.get(9).displayPixels());
 
-        System.out.print("TEST\n------\n");
+        System.out.print("Train\n------\n");
         /*Train Centroids by Average and Evaluate the TrainModel*/
         model_Train.TrainCentroidsByAverage();
         model_Train.EvaluateByCentroids();
@@ -35,9 +34,9 @@ public class Launcher {
 
         /* TEST MODEL on Trained Model */
         /*-----------------------------*/
-        System.out.print("TRAIN\n------\n");
+        System.out.print("TEST\n------\n");
         /* Read MNIS_Test Model */
-        String filePath_test ="/Users/ibrahim/Desktop/AIS/Java/mnist-project/mob-programming/mnist_test.csv";
+        String filePath_test ="/Users/ibrahim/IdeaProjects/mnist_test.csv";
         MNISTModel model_Test = new MNISTModel(filePath_test);
 
         /*Display the First image of the Testing Model data set */

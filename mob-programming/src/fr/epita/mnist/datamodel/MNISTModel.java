@@ -2,17 +2,20 @@ package fr.epita.mnist.datamodel;
 
 import fr.epita.mnist.services.CentroidClassifier;
 import fr.epita.mnist.services.MNISTReader;
+import org.w3c.dom.ls.LSOutput;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class MNISTModel {
     String filePath = "";
     public List<MNISTImage> images = new ArrayList<>();
-    public List<MNISTImage> meanByDigit = new ArrayList<>(10);
-    public List<MNISTImage> standardDeviationByDigit = new ArrayList<>(10);
+    private List<MNISTImage> meanByDigit = new ArrayList<>(10);
+    private List<MNISTImage> standardDeviationByDigit = new ArrayList<>(10);
     private double [][] confusionMatrix = new double[28][28];
     private CentroidClassifier classifier = new CentroidClassifier();
 
@@ -26,10 +29,9 @@ public class MNISTModel {
         if (file.exists()) {
             MNISTReader mnistReader = new MNISTReader() ;
             this.images  = mnistReader.getAllImages(file);
-
         }
-        else
-        {System.out.print("file not found");}
+        else {System.out.print("file not found");
+        }
     }
 
     public void TrainCentroidsByAverage() {
@@ -59,25 +61,20 @@ public class MNISTModel {
     }
 
     public List<MNISTImage> IsolateImagesOfDigit(int digit, int occurrences){
-        int counter =occurrences;
-        if (counter>0 && digit >=0 && digit<=9)
-        {
-            List<MNISTImage> isolatedImages = new ArrayList<>();
-            for (MNISTImage image : this.images){
-                if ((int)image.getLabel()==digit) {
-                    isolatedImages.add(image);
-                    counter--;
-                }
-                if (counter==0){
-                    break;
-                }
-            }
-            if (counter>0) {System.out.println("\nthere is only" + (occurrences-counter) +
-                    "occurrences of digit " +digit + " in the dataset!\n");}
-            return isolatedImages;
+        List<MNISTImage> isolated=images.stream().collect(
+                Collectors.filtering(mnistImage -> mnistImage.getLabel() == digit,
+                        Collectors.toList()));
+        if (isolated.stream().count()==0){
+            System.out.println("No occurrences were found!\n");
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
+        if (occurrences<=isolated.stream().count())
+        {
+            return isolated.subList(0,occurrences);
+        }
+        return isolated;
     }
+
     private String DisplayConfusionMatrix () {
          double validResults=0.0;
          double invalidResults =0.0;

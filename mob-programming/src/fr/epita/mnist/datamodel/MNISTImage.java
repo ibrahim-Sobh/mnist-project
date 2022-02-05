@@ -34,7 +34,7 @@ public class MNISTImage {
                     newLineCounter+=1;
                }
                double  value = matrix[i / 28][i % 28];
-               if (value>100) {
+               if (value>128) {
                     image+="XX";
                }
                else

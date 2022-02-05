@@ -1,6 +1,6 @@
 # mnist-project
 
-This Project is a primitive ML Model built using basic Linear Algebra concepts, Writting in Java only using Intellij IDE.
+This Project is a primitive ML Model built using basic Linear Algebra concepts, Written in Java only using Intellij IDE.
 I used the Mnist digits Data set.
 
 For this project to work properly you need to specify the file_Path_train & filePath_test with respectively

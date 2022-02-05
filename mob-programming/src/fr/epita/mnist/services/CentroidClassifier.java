@@ -117,7 +117,7 @@ public class CentroidClassifier {
                 }
                 else { // Cast out liar
                     if (imageMatrix[j / 28][j % 28] > 0) {
-                        z_Score += 3;
+                        z_Score += 3; /* to the outside of the scope of accepted z_score-Range*/
                     }
                 }
             }
@@ -128,7 +128,6 @@ public class CentroidClassifier {
         }
         return prediction;
     }
-
 
     public double[][] EvaluateModel (List<MNISTImage> Centroids,List<MNISTImage> images){
 
@@ -151,7 +150,6 @@ public class CentroidClassifier {
         }
         return confusionMatrix;
     }
-
 
 
 }

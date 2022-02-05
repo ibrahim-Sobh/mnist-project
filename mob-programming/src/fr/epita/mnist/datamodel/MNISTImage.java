@@ -22,7 +22,6 @@ public class MNISTImage {
           this.pixels = pixels;
      }
 
-
      public String displayPixels ( ){
           double [][] matrix = this.pixels;
           int newLineCounter =0;
@@ -46,7 +45,5 @@ public class MNISTImage {
 
 
      }
-
-
 
 }

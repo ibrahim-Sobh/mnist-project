@@ -46,22 +46,29 @@ public class MNISTModel {
         this.standardDeviationByDigit = classifier.trainCentroidsStd(this.meanByDigit,this.images);
     }
 
+    public void predictUsingCentroids(MNISTImage image) {
+        System.out.println("This is most probably the image of the digit number "+classifier.predict(this.meanByDigit,image));
+    }
+    public void predictUsingZ_Score(MNISTImage image) {
+        System.out.println("This is most probably the image of the digit number "+classifier.predictStd(this.meanByDigit,this.standardDeviationByDigit,image));
+    }
+
     public void EvaluateByCentroids() {
         this.confusionMatrix = classifier.EvaluateModel(this.meanByDigit,this.images);
-        System.out.print(DisplayConfusionMatrixAndModelAccuracy());
+        System.out.print("\nUsing Centroids\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
     public void EvaluateByCentroidsWithTestImages(List<MNISTImage> images) {
         this.confusionMatrix = classifier.EvaluateModel(this.meanByDigit,images);
-        System.out.print(DisplayConfusionMatrixAndModelAccuracy());
+        System.out.print("\nUsing Centroids\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
 
     public void EvaluateByZ_Score() {
         this.confusionMatrix = classifier.EvaluateModelStd(this.meanByDigit,this.standardDeviationByDigit,this.images);
-        System.out.print(DisplayConfusionMatrixAndModelAccuracy());
+        System.out.print("\nUsing Z-Score\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
     public void EvaluateByZ_Score_WithTestImages(List<MNISTImage> images) {
         this.confusionMatrix = classifier.EvaluateModelStd(this.meanByDigit,this.standardDeviationByDigit,images);
-        System.out.print(DisplayConfusionMatrixAndModelAccuracy());
+        System.out.print("\nUsing Z-Score\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
 
     public List<MNISTImage> IsolateImagesOfDigit(int digit, int occurrences){

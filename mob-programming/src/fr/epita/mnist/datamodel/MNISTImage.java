@@ -40,7 +40,7 @@ public class MNISTImage {
                {image+="..";
                }
           }
-          image+="\n\n";
+          image+="\n";
           return image;
 
 

@@ -2,10 +2,8 @@ package fr.epita.mnist.services;
 
 import fr.epita.mnist.datamodel.MNISTImage;
 
-import java.security.PublicKey;
 import java.util.*;
 import java.util.stream.Collectors;
-;
 
 public class CentroidClassifier {
 
@@ -14,16 +12,14 @@ public class CentroidClassifier {
 
         Map<Double,Long> distribution= images.stream()
                 .collect(Collectors.groupingBy(MNISTImage::getLabel,Collectors.counting()));
-        TreeMap<Double, Long> sortedDistribution = new TreeMap<>();
-        sortedDistribution.putAll(distribution);
-        return sortedDistribution;
+        return new TreeMap<>(distribution);
     }
 
     public List<MNISTImage> trainCentroids (List<MNISTImage> images){
         Map<Double,Long> distributionByDigit = calculateDistribution(images);
         List<MNISTImage>  centroids = new ArrayList<>();
-        double divider =0.0;
-        double[][] pixels = new double[28][28];
+        double divider;
+        double[][] pixels;
 
         for (Map.Entry<Double, Long> digit : distributionByDigit.entrySet()){
             MNISTImage centroid =new MNISTImage();
@@ -45,12 +41,12 @@ public class CentroidClassifier {
         return centroids;
     }
 
-    public List<MNISTImage> trainCentroidsStd (List<MNISTImage> CentroidsByMean,List<MNISTImage> images){
+    public List<MNISTImage> trainStandardDeviation(List<MNISTImage> CentroidsByMean, List<MNISTImage> images){
         Map<Double,Long> distributionByDigit = calculateDistribution(images);
-        double[][] pixels =new double[28][28];
-        double [][] meanMatrix = new double[28][28];
+        double[][] pixels;
+        double [][] meanMatrix;
         List<MNISTImage>  centroids = new ArrayList<>();
-        double divider =0.0;
+        double divider;
         for (Map.Entry<Double, Long> digit : distributionByDigit.entrySet()){
             MNISTImage centroid =new MNISTImage();
             centroid.setLabel(digit.getKey());
@@ -74,8 +70,11 @@ public class CentroidClassifier {
         return centroids;
     }
 
-
-    public double predict (List<MNISTImage> Centroids,MNISTImage image){
+    /** This Function uses the Euclidean Distance Formula to measure the distance of each image with the Centroids which is done Pixel by Pixel
+     * @param Centroids List of images containing the image of each digit represented in Centroids of Pixel by Pixel
+     * @param image image to be predicted
+     */
+    public double predictWithCentroids(List<MNISTImage> Centroids, MNISTImage image){
 
         double minimumDistance =256*28*28; // Maximum distance possible :)
         double prediction =10;
@@ -98,7 +97,15 @@ public class CentroidClassifier {
         return prediction;
     }
 
-    public double predictStd(List<MNISTImage> CentroidsMeans,List<MNISTImage> CentroidsStd,MNISTImage image){
+    /**
+     * This Function uses the Z-Score Formula Z= [ point( in our case pixel ) - Mean (of all points in the same set or position ) ] / Standard Deviation(of all points in the same set or position )
+     * Then do the SUM(of Z_Score pixel by pixel ) and determines which Digit has the smallest Z-Score in comparison with the image.
+     *
+     * @param CentroidsMeans List of images containing the image of each digit represented in Centroids/means of Pixel by Pixel
+     * @param CentroidsStd List of images containing the image of each digit represented in Std of Pixel by Pixel
+     * @param image image to be predicted
+     */
+    public double predictWithZ_Score(List<MNISTImage> CentroidsMeans, List<MNISTImage> CentroidsStd, MNISTImage image){
 
         double minimumDistance =256*28*28; // Maximum z_Score possible :)
         double prediction =10;
@@ -129,23 +136,23 @@ public class CentroidClassifier {
         return prediction;
     }
 
-    public double[][] EvaluateModel (List<MNISTImage> Centroids,List<MNISTImage> images){
+    public double[][] EvaluateCentroidsModel(List<MNISTImage> Centroids, List<MNISTImage> images){
 
         double [][] confusionMatrix = new double[10][10];
         for (MNISTImage image:  images ) {
             int label = (int) image.getLabel();
-            int prediction = (int) predict(Centroids,image);
+            int prediction = (int) predictWithCentroids(Centroids,image);
             confusionMatrix[label][prediction]+=1;
             }
         return confusionMatrix;
         }
 
-    public double[][] EvaluateModelStd (List<MNISTImage> CentroidsMeans,List<MNISTImage> CentroidsStd,List<MNISTImage> images){
+    public double[][] EvaluateZ_ScoreModel(List<MNISTImage> CentroidsMeans, List<MNISTImage> CentroidsStd, List<MNISTImage> images){
 
         double [][] confusionMatrix = new double[10][10];
         for (MNISTImage image:  images ) {
             int label = (int) image.getLabel();
-            int prediction = (int) predictStd(CentroidsMeans,CentroidsStd,image);
+            int prediction = (int) predictWithZ_Score(CentroidsMeans,CentroidsStd,image);
             confusionMatrix[label][prediction]+=1;
         }
         return confusionMatrix;

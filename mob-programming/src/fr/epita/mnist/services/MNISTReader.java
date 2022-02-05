@@ -18,7 +18,7 @@ public class MNISTReader {
         while(scanner.hasNext()){
             String line = scanner.nextLine();
             MNISTImage image =new MNISTImage();
-            image.setLabel(Double.valueOf(line.substring(0,1)));
+            image.setLabel(Double.parseDouble(line.substring(0,1)));
             line=line.substring(2);// Jump from label
             image.setPixels(loadLine(line));
             mnistImages.add(image);
@@ -29,9 +29,8 @@ public class MNISTReader {
     private static double[][] loadLine(String sample) {
         String [] entries  =sample.split(",");
         double [][] entriesAsDouble =new double [28][28];
-        int counter =0;
         for ( int i=0 ; i< entries.length; i++){
-            entriesAsDouble[i/28][i%28]=Double.valueOf(entries[i]);
+            entriesAsDouble[i/28][i%28]=Double.parseDouble(entries[i]);
         }
         return entriesAsDouble;
     }

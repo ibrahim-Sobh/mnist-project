@@ -17,7 +17,7 @@ public class MNISTModel {
     private List<MNISTImage> meanByDigit = new ArrayList<>(10);
     private List<MNISTImage> standardDeviationByDigit = new ArrayList<>(10);
     private double [][] confusionMatrix = new double[28][28];
-    private CentroidClassifier classifier = new CentroidClassifier();
+    private final CentroidClassifier classifier = new CentroidClassifier();
 
     public List<MNISTImage> getImages() {
         return this.images;
@@ -43,31 +43,31 @@ public class MNISTModel {
     }
     public void TrainCentroidsByZ_Score() {
         TrainCentroidsByAverage();
-        this.standardDeviationByDigit = classifier.trainCentroidsStd(this.meanByDigit,this.images);
+        this.standardDeviationByDigit = classifier.trainStandardDeviation(this.meanByDigit,this.images);
     }
 
     public void predictUsingCentroids(MNISTImage image) {
-        System.out.println("This is most probably the image of the digit number "+classifier.predict(this.meanByDigit,image));
+        System.out.println("This is most probably the image of the digit number "+classifier.predictWithCentroids(this.meanByDigit,image));
     }
     public void predictUsingZ_Score(MNISTImage image) {
-        System.out.println("This is most probably the image of the digit number "+classifier.predictStd(this.meanByDigit,this.standardDeviationByDigit,image));
+        System.out.println("This is most probably the image of the digit number "+classifier.predictWithZ_Score(this.meanByDigit,this.standardDeviationByDigit,image));
     }
 
     public void EvaluateByCentroids() {
-        this.confusionMatrix = classifier.EvaluateModel(this.meanByDigit,this.images);
+        this.confusionMatrix = classifier.EvaluateCentroidsModel(this.meanByDigit,this.images);
         System.out.print("\nUsing Centroids\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
     public void EvaluateByCentroidsWithTestImages(List<MNISTImage> images) {
-        this.confusionMatrix = classifier.EvaluateModel(this.meanByDigit,images);
+        this.confusionMatrix = classifier.EvaluateCentroidsModel(this.meanByDigit,images);
         System.out.print("\nUsing Centroids\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
 
     public void EvaluateByZ_Score() {
-        this.confusionMatrix = classifier.EvaluateModelStd(this.meanByDigit,this.standardDeviationByDigit,this.images);
+        this.confusionMatrix = classifier.EvaluateZ_ScoreModel(this.meanByDigit,this.standardDeviationByDigit,this.images);
         System.out.print("\nUsing Z-Score\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
     public void EvaluateByZ_Score_WithTestImages(List<MNISTImage> images) {
-        this.confusionMatrix = classifier.EvaluateModelStd(this.meanByDigit,this.standardDeviationByDigit,images);
+        this.confusionMatrix = classifier.EvaluateZ_ScoreModel(this.meanByDigit,this.standardDeviationByDigit,images);
         System.out.print("\nUsing Z-Score\n"+DisplayConfusionMatrixAndModelAccuracy());
     }
 
@@ -75,11 +75,11 @@ public class MNISTModel {
         List<MNISTImage> isolated=images.stream().collect(
                 Collectors.filtering(mnistImage -> mnistImage.getLabel() == digit,
                         Collectors.toList()));
-        if (isolated.stream().count()==0){
+        if ((long) isolated.size() ==0){
             System.out.println("\nNo occurrences were found!\n");
             return new ArrayList<>();
         }
-        if (occurrences<=isolated.stream().count())
+        if (occurrences<= (long) isolated.size())
         {
             return isolated.subList(0,occurrences);
         }
@@ -91,9 +91,9 @@ public class MNISTModel {
          double invalidResults =0.0;
          double maxvalue = GetMatrixMaximum(this.confusionMatrix);
          int maxSpacePerCell=Double.toString((int) maxvalue).length()+2;
-         int SpacesLeft =0;
-         String toDisplay ="";
-         toDisplay+="-".repeat(maxSpacePerCell*10)+"\n";
+         int SpacesLeft;
+         StringBuilder toDisplay = new StringBuilder();
+         toDisplay.append("-".repeat(maxSpacePerCell * 10)).append("\n");
          for(int index =0; index <confusionMatrix.length* confusionMatrix.length; index++) {
             if (index/10 == index%10) {
                 validResults+=this.confusionMatrix[index/10][index%10];
@@ -102,15 +102,15 @@ public class MNISTModel {
                 invalidResults+=this.confusionMatrix[index/10][index%10];
             }
              SpacesLeft=maxSpacePerCell-Double.toString(this.confusionMatrix[index/10][index%10]).length();
-             toDisplay+= "|"+" ".repeat(SpacesLeft)+ (index/10 == index%10?"\033[0;1m":"\033[0;0m")+(int)this.confusionMatrix[index/10][index%10]+" ";
+             toDisplay.append("|").append(" ".repeat(SpacesLeft)).append(index / 10 == index % 10 ? "\033[0;1m" : "\033[0;0m").append((int) this.confusionMatrix[index / 10][index % 10]).append(" ");
 
              if(index%10==9){
-                 toDisplay+="|\n";
-                 toDisplay+="-".repeat(maxSpacePerCell*10)+"\n";
+                 toDisplay.append("|\n");
+                 toDisplay.append("-".repeat(maxSpacePerCell * 10)).append("\n");
              }
          }
-         toDisplay+="Accuracy is % " + String.format("%.2f", validResults/(validResults+invalidResults)*100)+"\n\n\033[0;0m";
-         return toDisplay;
+         toDisplay.append("Accuracy is % ").append(String.format("%.2f", validResults / (validResults + invalidResults) * 100)).append("\n\n\033[0;0m");
+         return toDisplay.toString();
      }
 
      private double GetMatrixMaximum(double[][] matrix){

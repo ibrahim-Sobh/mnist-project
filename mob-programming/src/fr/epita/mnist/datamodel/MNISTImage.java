@@ -1,6 +1,9 @@
 package fr.epita.mnist.datamodel;
 
+
 public class MNISTImage {
+
+     /* Each image has a label and a 28x28 Matrix representing its Pixels */
 
      double label;
 
@@ -25,23 +28,24 @@ public class MNISTImage {
      public String displayPixels ( ){
           double [][] matrix = this.pixels;
           int newLineCounter =0;
-          String image = "";
+          StringBuilder image = new StringBuilder("\n");
           for ( int i=0 ; i< matrix.length*matrix.length; i++){
 
                if (newLineCounter <i/28) {
-                    image+="\n";
+                    image.append("\n");
                     newLineCounter+=1;
                }
                double  value = matrix[i / 28][i % 28];
                if (value>128) {
-                    image+="XX";
+                    image.append("XX");
                }
                else
-               {image+="..";
+               {
+                    image.append("..");
                }
           }
-          image+="\n";
-          return image;
+          image.append("\n");
+          return image.toString();
 
 
      }

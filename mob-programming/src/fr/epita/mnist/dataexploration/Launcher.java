@@ -3,14 +3,11 @@ package fr.epita.mnist.dataexploration;
 import fr.epita.mnist.datamodel.MNISTImage;
 import fr.epita.mnist.datamodel.MNISTModel;
 
-
-import java.io.FileNotFoundException;
 import java.util.List;
-import java.io.*;
 
 public class Launcher {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
 
         /* Read MNIS_TrainModel */
         String filePath_train ="/Users/ibrahim/IdeaProjects/mnist_train.csv";
@@ -18,7 +15,7 @@ public class Launcher {
 
 
         /*Isolate images of a digit from a data set*/
-        List <MNISTImage> images_of_Zeros = model_Train.IsolateImagesOfDigit(0,11);
+        List <MNISTImage> images_of_Zeros = model_Train.IsolateImagesOfDigit(0,10);
         System.out.print(images_of_Zeros.get(9).displayPixels());
 
         System.out.print("\nTRAIN\n------\n");

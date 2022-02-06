@@ -47,10 +47,10 @@ public class MNISTModel {
     }
 
     public void predictUsingCentroids(MNISTImage image) {
-        System.out.println("This is most probably the image of the digit number "+classifier.predictWithCentroids(this.meanByDigit,image));
+        System.out.println("This is most probably the image of the digit number "+(int) classifier.predictWithCentroids(this.meanByDigit,image));
     }
     public void predictUsingZ_Score(MNISTImage image) {
-        System.out.println("This is most probably the image of the digit number "+classifier.predictWithZ_Score(this.meanByDigit,this.standardDeviationByDigit,image));
+        System.out.println("This is most probably the image of the digit number "+(int) classifier.predictWithZ_Score(this.meanByDigit,this.standardDeviationByDigit,image));
     }
 
     public void EvaluateByCentroids() {

@@ -8,8 +8,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.stream.Collectors;
-
 public class MNISTModel {
 
     String filePath = "";
@@ -72,18 +70,7 @@ public class MNISTModel {
     }
 
     public List<MNISTImage> IsolateImagesOfDigit(int digit, int occurrences){
-        List<MNISTImage> isolated=images.stream().collect(
-                Collectors.filtering(mnistImage -> mnistImage.getLabel() == digit,
-                        Collectors.toList()));
-        if ((long) isolated.size() ==0){
-            System.out.println("\nNo occurrences were found!\n");
-            return new ArrayList<>();
-        }
-        if (occurrences<= (long) isolated.size())
-        {
-            return isolated.subList(0,occurrences);
-        }
-        return isolated;
+        return classifier.IsolateN_ImagesOfDigit(this.images,digit,occurrences);
     }
 
     private String DisplayConfusionMatrixAndModelAccuracy() {

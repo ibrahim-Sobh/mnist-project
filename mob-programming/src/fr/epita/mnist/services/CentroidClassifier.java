@@ -15,24 +15,44 @@ public class CentroidClassifier {
         return new TreeMap<>(distribution);
     }
 
+    private List<MNISTImage> IsolateImagesOfDigit(List<MNISTImage> images,int digit)
+    {
+        return images.stream().collect(
+                Collectors.filtering(mnistImage -> mnistImage.getLabel() == digit,
+                        Collectors.toList()));
+
+    }
+    public  List<MNISTImage> IsolateN_ImagesOfDigit(List<MNISTImage> images, int digit, int occurrences){
+        List<MNISTImage> isolated=IsolateImagesOfDigit(images,digit);
+        if ((long) isolated.size() ==0){
+            System.out.println("\nNo occurrences were found!\n");
+            return new ArrayList<>();
+        }
+        if (occurrences<= (long) isolated.size())
+        {
+            return isolated.subList(0,occurrences);
+        }
+        return isolated;
+    }
+
     public List<MNISTImage> trainCentroids (List<MNISTImage> images){
         Map<Double,Long> distributionByDigit = calculateDistribution(images);
         List<MNISTImage>  centroids = new ArrayList<>();
+        List<MNISTImage>  IsolatedImages;
         double divider;
         double[][] pixels;
+
 
         for (Map.Entry<Double, Long> digit : distributionByDigit.entrySet()){
             MNISTImage centroid =new MNISTImage();
             centroid.setLabel(digit.getKey());
             double [][] centroidMatrix = new double[28][28];
-
-            for (MNISTImage image : images){
-                if ((int)image.getLabel()==digit.getKey()) {
+            IsolatedImages =IsolateImagesOfDigit(images,(int) centroid.getLabel());
+            for (MNISTImage image : IsolatedImages){
                     divider = digit.getValue();
                     pixels = image.getPixels();
                     for (int j = 0; j < centroidMatrix.length * centroidMatrix.length; j++) {
                         centroidMatrix[j / 28][j % 28] += pixels[j / 28][j % 28] / divider;
-                    }
                 }
             }
             centroid.setPixels(centroidMatrix);
@@ -46,12 +66,14 @@ public class CentroidClassifier {
         double[][] pixels;
         double [][] meanMatrix;
         List<MNISTImage>  centroids = new ArrayList<>();
+        List<MNISTImage>  IsolatedImages;
         double divider;
         for (Map.Entry<Double, Long> digit : distributionByDigit.entrySet()){
             MNISTImage centroid =new MNISTImage();
             centroid.setLabel(digit.getKey());
             double [][] centroidMatrix = new double[28][28];
-            for (MNISTImage image : images){
+            IsolatedImages =IsolateImagesOfDigit(images,(int) centroid.getLabel());
+            for (MNISTImage image : IsolatedImages){
                 if ((int)image.getLabel()==digit.getKey()) {
                     divider = digit.getValue();
                     pixels= image.getPixels();

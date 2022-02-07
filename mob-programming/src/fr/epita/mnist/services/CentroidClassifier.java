@@ -53,7 +53,7 @@ public class CentroidClassifier {
                     pixels = image.getPixels();
                     for (int j = 0; j < centroidMatrix.length * centroidMatrix.length; j++) {
                         centroidMatrix[j / 28][j % 28] += pixels[j / 28][j % 28] / divider;
-                }
+                    }
             }
             centroid.setPixels(centroidMatrix);
             centroids.add(centroid);

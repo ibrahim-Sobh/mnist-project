@@ -42,7 +42,6 @@ public class CentroidClassifier {
         double divider;
         double[][] pixels;
 
-
         for (Map.Entry<Double, Long> digit : distributionByDigit.entrySet()){
             MNISTImage centroid =new MNISTImage();
             centroid.setLabel(digit.getKey());
@@ -68,6 +67,7 @@ public class CentroidClassifier {
         List<MNISTImage>  centroids = new ArrayList<>();
         List<MNISTImage>  IsolatedImages;
         double divider;
+
         for (Map.Entry<Double, Long> digit : distributionByDigit.entrySet()){
             MNISTImage centroid =new MNISTImage();
             centroid.setLabel(digit.getKey());
